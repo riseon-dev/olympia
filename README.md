@@ -1,2 +1,4 @@
-# olympia
-Monorepo for Solana MVP
+# Monorepo for Olympia
+A Solana trading agent launcher and marketplace.
+
+
