@@ -21,7 +21,7 @@
       "outputs": []
     },
     "start": {},
-    "start:dev": {
+    "dev": {
       "cache": false
     }
   }
