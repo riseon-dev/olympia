@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'ui/src/components/ui/button.tsx';
 
 type ReactText = string | number;
 
@@ -14,7 +15,7 @@ const ConnectButton = (props: SignInButtonProps): React.ReactElement => {
 
   return (
     <div>
-      <button onClick={onClick} type={'button'} key={key}>{name}</button>
+      <Button onClick={onClick} variant={'default'} key={key}>{name}</Button>
     </div>
   );
 };
