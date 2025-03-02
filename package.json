@@ -6,7 +6,7 @@
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm run build:all",
     "build:all": "turbo run build",
-    "dev": "turbo run start:dev",
+    "dev": "turbo run dev",
     "format": "turbo run format",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",

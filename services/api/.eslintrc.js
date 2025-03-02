@@ -7,6 +7,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
+    "eslint-config-custom",
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
