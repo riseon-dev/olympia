@@ -66,6 +66,6 @@ export class SolanaSignInService implements SignInService {
       throw new Error('Sign In verification failed!');
     }
 
-    return false;
+    return true;
   }
 }

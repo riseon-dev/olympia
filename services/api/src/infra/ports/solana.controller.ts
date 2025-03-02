@@ -1,8 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
+import { SignInWorkflow } from '../../application/sign-in.workflow';
 
 @Controller('/solana')
 export class SolanaController {
-  constructor() {}
+  constructor(private readonly signInWorkflow: SignInWorkflow) {}
 
   @Get()
   getHello(): { message: string } {
@@ -13,4 +14,7 @@ export class SolanaController {
 
   @Get('generate')
   generate() {}
+
+  @Post('verify')
+  verify() {}
 }
