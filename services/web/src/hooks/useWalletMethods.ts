@@ -1,7 +1,7 @@
 import {useWallet} from '@solana/wallet-adapter-react';
 import {useCallback, useMemo} from 'react';
-import {createSignInData} from '../utils/createSignInData.ts';
-
+import type {SolanaSignInInput} from '@solana/wallet-standard-features';
+import axios from 'axios';
 export const useWalletMethods = () => {
 
   const { wallet, publicKey, signIn } = useWallet();
@@ -34,18 +34,61 @@ export const useWalletMethods = () => {
   /** SignIn */
   const handleSignIn = useCallback(async () => {
     if (!publicKey || !wallet) return;
-    const signInData = await createSignInData();
-
     try {
+    // const signInData = await createSignInData();
+
+    console.log('handleSignIn');
+      const createResponse = await axios.get("http://localhost:3000/solana/generate");
+      const input: SolanaSignInInput = createResponse.data;
+
       // eslint-disable-next-line
       // @ts-ignore
-      const {account, signedMessage, signature} = await signIn(signInData);
+      const output = await signIn(input);
+
+      console.log('output', JSON.stringify(output));
+
+// send message to backend
+      const constructPayload = JSON.stringify({ input, output: {
+        account: {
+          //    readonly address: string;
+          //
+          //     /** Public key of the account, corresponding with a secret key to use. */
+          //     readonly publicKey: ReadonlyUint8Array;
+          //
+          //     /**
+          //      * Chains supported by the account.
+          //      *
+          //      * This must be a subset of the {@link Wallet.chains | chains} of the Wallet.
+          //      */
+          //     readonly chains: IdentifierArray;
+          //
+          //     /**
+          //      * Feature names supported by the account.
+          //      *
+          //      * This must be a subset of the names of {@link Wallet.features | features} of the Wallet.
+          //      */
+          //     readonly features: IdentifierArray;
+          publicKey: publicKey.toBuffer().toString('hex'),
+        },
+        signedMessage: output.signedMessage,
+        signature: output.signature,
+        } });
+
+      const verifyResponse = await axios.post("http://localhost:3000/solana/verify", constructPayload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const success = verifyResponse.data;
+      console.log('success', success);
 
       console.log({
         status: 'success',
-        method: 'signIn',
-        message: `Message signed: ${JSON.stringify(signedMessage)} by ${account.address} with signature ${JSON.stringify(signature)}`,
+        method: 'signMessage',
+        message: `Message signed: ${JSON.stringify(output.signedMessage)} by ${output.account.address} with signature ${JSON.stringify(output.signature)}`,
       });
+
+
     } catch (error) {
       console.log({
         status: 'error',

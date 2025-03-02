@@ -51,21 +51,10 @@ export class SolanaSignInService implements SignInService {
     input: SolanaSignInInput,
     output: SolanaSignInOutput,
   ): boolean {
-    const backendInput = input;
-    const backendOutput: SolanaSignInOutput = {
-      account: {
-        ...output.account,
-        publicKey: new Uint8Array(output.account.publicKey),
-      },
-      signature: new Uint8Array(output.signature),
-      signedMessage: new Uint8Array(output.signedMessage),
-    };
-
-    if (!verifySignIn(backendInput, backendOutput)) {
+    if (!verifySignIn(input, output)) {
       this.logger.error('Sign In verification failed!');
       throw new Error('Sign In verification failed!');
     }
-
     return true;
   }
 }
