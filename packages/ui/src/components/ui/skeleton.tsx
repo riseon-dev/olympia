@@ -1,9 +1,10 @@
-import { cn } from "src/lib/utils"
+import React from 'react';
+import { cn } from "../../lib/utils"
 
 function Skeleton({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: React.HTMLAttributes<HTMLDivElement>): React.ReactElement {
   return (
     <div
       className={cn(

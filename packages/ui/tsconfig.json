@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "jsx": "react",
+    "lib": ["dom", "es2015"],
+    "types": ["react", "react-dom"],
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

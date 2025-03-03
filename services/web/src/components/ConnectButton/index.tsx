@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'ui/src/components/ui/button.tsx';
+import { Button } from '@olympia/ui/src/components/ui/button.tsx';
 
 type ReactText = string | number;
 
