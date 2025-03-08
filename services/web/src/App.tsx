@@ -8,6 +8,7 @@ import {AutoConnectProvider} from './components/AutoConnectProvider';
 import {StatelessApp} from './components/StatelessApp';
 import {clusterApiUrl} from '@solana/web3.js';
 import {UnsafeBurnerWalletAdapter} from '@solana/wallet-adapter-wallets';
+import {ThemeProvider} from './components/ThemeProvider';
 
 function App(): React.ReactElement {
   const network = WalletAdapterNetwork.Mainnet;
@@ -92,7 +93,9 @@ function App(): React.ReactElement {
       <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} autoConnect={autoConnect}>
           <WalletModalProvider>
-            <StatelessApp />
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              <StatelessApp />
+            </ThemeProvider>
           </WalletModalProvider>
         </WalletProvider>
       </ConnectionProvider>
