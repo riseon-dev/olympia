@@ -5,17 +5,17 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "../../packages/ui/src/styles/globals.css",
+    "css": "src/index.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
-  "iconLibrary": "lucide",
   "aliases": {
-    "components": "src/components",
-    "hooks": "src/hooks",
+    "components": "src/design-system",
+    "utils": "src/lib/utils",
+    "ui": "src/design-system",
     "lib": "src/lib",
-    "utils": "@olympia/ui/lib/utils",
-    "ui": "@olympia/ui/components"
-  }
+    "hooks": "src/hooks"
+  },
+  "iconLibrary": "lucide"
 }
