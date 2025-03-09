@@ -6,33 +6,59 @@ import {
   WalletDisconnectButton,
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui';
-import '@solana/wallet-adapter-react-ui/styles.css';
+import { Box, Flex, Section } from '@radix-ui/themes';
 
 export type BarProps = {
   publicKey: PublicKey | null;
   connectedMethods: ConnectedMethods[];
 };
 
-const Bar = (props: BarProps): React.ReactElement => {
-  const { publicKey, connectedMethods } = props;
+const SignInButtons = (props: {connectedMethods: ConnectedMethods[] } ): React.ReactElement => {
+  const { connectedMethods } = props;
   const signIn = connectedMethods.find((method) => method.name === 'Sign In');
-  const disconnect = connectedMethods.find((method) => method.name === 'Disconnect');
 
   return (
-    <div>
-      {publicKey ? (
-        <div>
-          <WalletDisconnectButton />
-
-          {signIn && (<ConnectButton name={'Sign In'} key={'Sign In'} onClick={signIn.onClick} />) }
-          {disconnect && (<ConnectButton name={'Disconnect'} key={'Disconnect'} onClick={disconnect.onClick} />) }
-        </div>
-      ) : (
-        <div>
-          <WalletMultiButton />
-        </div>
+    <>
+    <Box width={'150px'}>
+    <WalletDisconnectButton />
+    </Box>
+      {signIn && (
+        <Box width={'150px'}>
+          <ConnectButton name={'Sign In'} key={'Sign In'} onClick={signIn.onClick} />
+        </Box>
       )}
-    </div>
+      </>
+
+  )
+}
+
+const Bar = (props: BarProps): React.ReactElement => {
+  const { publicKey, connectedMethods } = props;
+
+
+  return (
+    <Section>
+      <Flex>
+        <Box>
+          hello
+        </Box>
+        <Box>
+          World
+        </Box>
+
+
+
+      {publicKey ? (
+
+        <SignInButtons connectedMethods={connectedMethods} />
+
+      ) : (
+        <Box width={'150px'}>
+          <WalletMultiButton />
+        </Box>
+      )}
+      </Flex>
+    </Section>
   );
 };
 
