@@ -15,19 +15,17 @@ export type BarProps = {
 
 const Bar = (props: BarProps): React.ReactElement => {
   const { publicKey, connectedMethods } = props;
+  const signIn = connectedMethods.find((method) => method.name === 'Sign In');
+  const disconnect = connectedMethods.find((method) => method.name === 'Disconnect');
 
   return (
     <div>
       {publicKey ? (
         <div>
           <WalletDisconnectButton />
-          {connectedMethods.map((method, i) => (
-            <ConnectButton
-              name={`${method.name}`}
-              key={`${method.name}-${i}`}
-              onClick={method.onClick}
-            />
-          ))}
+
+          {signIn && (<ConnectButton name={'Sign In'} key={'Sign In'} onClick={signIn.onClick} />) }
+          {disconnect && (<ConnectButton name={'Disconnect'} key={'Disconnect'} onClick={disconnect.onClick} />) }
         </div>
       ) : (
         <div>

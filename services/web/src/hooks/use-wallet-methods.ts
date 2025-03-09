@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import type { SolanaSignInInput } from '@solana/wallet-standard-features';
 import axios from 'axios';
 export const useWalletMethods = () => {
-  const { wallet, publicKey, signIn } = useWallet();
+  const { wallet, publicKey, signIn, connect, disconnect } = useWallet();
   //  const { wallet, publicKey, connect, disconnect, signMessage, signIn } = useWallet();
 
   /** SignMessage */
@@ -132,43 +132,43 @@ export const useWalletMethods = () => {
   // }, [publicKey, signIn, wallet]);
 
   /** Connect */
-  // const handleConnect = useCallback(async () => {
-  //   if (!publicKey || !wallet) return;
-  //
-  //   try {
-  //     await connect();
-  //   } catch (error) {
-  //     console.log({
-  //       status: 'error',
-  //       method: 'connect',
-  //       // eslint-disable-next-line
-  //       // @ts-ignore
-  //       message: error.message,
-  //     });
-  //   }
-  // }, [connect, publicKey, wallet]);
+  const handleConnect = useCallback(async () => {
+    if (!publicKey || !wallet) return;
+
+    try {
+      await connect();
+    } catch (error) {
+      console.log({
+        status: 'error',
+        method: 'connect',
+        // eslint-disable-next-line
+        // @ts-ignore
+        message: error.message,
+      });
+    }
+  }, [connect, publicKey, wallet]);
 
   /** Disconnect */
-  // const handleDisconnect = useCallback(async () => {
-  //   if (!publicKey || !wallet) return;
-  //
-  //   try {
-  //     await disconnect();
-  //     console.log({
-  //       status: 'warning',
-  //       method: 'disconnect',
-  //       message: '👋',
-  //     });
-  //   } catch (error) {
-  //     console.log({
-  //       status: 'error',
-  //       method: 'disconnect',
-  //       // eslint-disable-next-line
-  //       // @ts-ignore
-  //       message: error.message,
-  //     });
-  //   }
-  // }, [disconnect, publicKey, wallet]);
+  const handleDisconnect = useCallback(async () => {
+    if (!publicKey || !wallet) return;
+
+    try {
+      await disconnect();
+      console.log({
+        status: 'warning',
+        method: 'disconnect',
+        message: '👋',
+      });
+    } catch (error) {
+      console.log({
+        status: 'error',
+        method: 'disconnect',
+        // eslint-disable-next-line
+        // @ts-ignore
+        message: error.message,
+      });
+    }
+  }, [disconnect, publicKey, wallet]);
 
   const connectedMethods = useMemo(() => {
     return [
@@ -180,28 +180,32 @@ export const useWalletMethods = () => {
         name: 'Sign In',
         onClick: handleSignIn,
       },
-      // {
-      //   name: 'Connect',
-      //   onClick: handleConnect
-      // },
+      {
+        name: 'Connect',
+        onClick: handleConnect
+      },
       // {
       //   name: 'Sign In Error',
       //   onClick: handleSignInError,
       // },
-      // {
-      //   name: 'Disconnect',
-      //   onClick: handleDisconnect,
-      // },
+      {
+        name: 'Disconnect',
+        onClick: handleDisconnect,
+      },
     ];
   }, [
     // handleSignMessage,
     handleSignIn,
+    handleConnect,
     // handleSignInError,
-    // handleDisconnect,
+    handleDisconnect,
   ]);
 
   return {
     publicKey,
     connectedMethods,
+    handleSignIn,
+    handleConnect,
+    handleDisconnect,
   };
 };
