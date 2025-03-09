@@ -1,10 +1,10 @@
-import { Moon, Sun } from 'lucide-react'
-import React from 'react'
+import { Moon, Sun } from 'lucide-react';
+import React from 'react';
 import { Button } from '../../design-system/atoms/button';
-import {useTheme} from '../ThemeProvider/index';
+import { useTheme } from '../ThemeProvider/index';
 
 export function ThemeSwitcher(): React.ReactElement {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme();
 
   return (
     <>
@@ -18,5 +18,5 @@ export function ThemeSwitcher(): React.ReactElement {
         <span className="sr-only">Toggle theme</span>
       </Button>
     </>
-  )
+  );
 }

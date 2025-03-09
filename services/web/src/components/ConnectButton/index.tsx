@@ -7,15 +7,16 @@ export type SignInButtonProps = {
   name: ReactText;
   key: ReactText;
   onClick: () => void;
-}
+};
 
 const ConnectButton = (props: SignInButtonProps): React.ReactElement => {
-
   const { onClick, name, key } = props;
 
   return (
     <div>
-      <Button onClick={onClick} variant={'default'} key={key}>{name}</Button>
+      <Button onClick={onClick} variant={'default'} key={key}>
+        {name}
+      </Button>
     </div>
   );
 };

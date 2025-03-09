@@ -1,10 +1,10 @@
-import { type DialogProps } from "@radix-ui/react-dialog"
-import clsx from "clsx"
-import { Command as CommandPrimitive } from "cmdk"
-import { Search } from "lucide-react"
-import * as React from "react"
-import { cn } from "../../lib/utils.ts"
-import {Dialog, DialogContent} from './dialog.tsx';
+import { type DialogProps } from '@radix-ui/react-dialog';
+import clsx from 'clsx';
+import { Command as CommandPrimitive } from 'cmdk';
+import { Search } from 'lucide-react';
+import * as React from 'react';
+import { cn } from '../../lib/utils.ts';
+import { Dialog, DialogContent } from './dialog.tsx';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -13,13 +13,13 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-base border-2 border-border bg-main font-base text-mtext",
-      className,
+      'flex h-full w-full flex-col overflow-hidden rounded-base border-2 border-border bg-main font-base text-mtext',
+      className
     )}
     {...props}
   />
-))
-Command.displayName = CommandPrimitive.displayName
+));
+Command.displayName = CommandPrimitive.displayName;
 
 // eslint-disable-next-line
 interface CommandDialogProps extends DialogProps {}
@@ -33,8 +33,8 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
         </Command>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
@@ -48,15 +48,15 @@ const CommandInput = React.forwardRef<
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-mtext placeholder:opacity-50 disabled:cursor-not-allowed disabled:opacity-50",
-        className,
+        'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-mtext placeholder:opacity-50 disabled:cursor-not-allowed disabled:opacity-50',
+        className
       )}
       {...props}
     />
   </div>
-))
+));
 
-CommandInput.displayName = CommandPrimitive.Input.displayName
+CommandInput.displayName = CommandPrimitive.Input.displayName;
 
 const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
@@ -64,12 +64,12 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    className={cn('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
     {...props}
   />
-))
+));
 
-CommandList.displayName = CommandPrimitive.List.displayName
+CommandList.displayName = CommandPrimitive.List.displayName;
 
 const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
@@ -80,9 +80,9 @@ const CommandEmpty = React.forwardRef<
     className="py-6 text-center text-sm"
     {...props}
   />
-))
+));
 
-CommandEmpty.displayName = CommandPrimitive.Empty.displayName
+CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
 
 const CommandGroup = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Group>,
@@ -91,14 +91,14 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden rounded-base p-2 text-mtext/80 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-base [&_[cmdk-group-heading]]:font-heading [&_[cmdk-group-heading]]:text-mtext/80",
-      className,
+      'overflow-hidden rounded-base p-2 text-mtext/80 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-base [&_[cmdk-group-heading]]:font-heading [&_[cmdk-group-heading]]:text-mtext/80',
+      className
     )}
     {...props}
   />
-))
+));
 
-CommandGroup.displayName = CommandPrimitive.Group.displayName
+CommandGroup.displayName = CommandPrimitive.Group.displayName;
 
 const CommandSeparator = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Separator>,
@@ -106,11 +106,11 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 h-0.5 bg-border", className)}
+    className={cn('-mx-1 h-0.5 bg-border', className)}
     {...props}
   />
-))
-CommandSeparator.displayName = CommandPrimitive.Separator.displayName
+));
+CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
 const CommandItem = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Item>,
@@ -120,16 +120,16 @@ const CommandItem = React.forwardRef<
     ref={ref}
     className={clsx(
       cn(
-        "relative flex cursor-default select-none items-center rounded-base px-2 py-1.5 text-sm text-mtext outline-border",
-        className,
+        'relative flex cursor-default select-none items-center rounded-base px-2 py-1.5 text-sm text-mtext outline-border',
+        className
       ),
-      "outline-0 outline aria-selected:outline-2",
+      'outline-0 outline aria-selected:outline-2'
     )}
     {...props}
   />
-))
+));
 
-CommandItem.displayName = CommandPrimitive.Item.displayName
+CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 const CommandShortcut = ({
   className,
@@ -137,12 +137,12 @@ const CommandShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
-      className={cn("ml-auto text-xs tracking-widest text-mtext", className)}
+      className={cn('ml-auto text-xs tracking-widest text-mtext', className)}
       {...props}
     />
-  )
-}
-CommandShortcut.displayName = "CommandShortcut"
+  );
+};
+CommandShortcut.displayName = 'CommandShortcut';
 
 export {
   Command,
@@ -154,4 +154,4 @@ export {
   CommandItem,
   CommandShortcut,
   CommandSeparator,
-}
+};

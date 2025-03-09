@@ -1,7 +1,10 @@
 import React from 'react';
 
-
-export default function Marquee({ items }: { items: string[] }): React.ReactElement {
+export default function Marquee({
+  items,
+}: {
+  items: string[];
+}): React.ReactElement {
   return (
     <div className="relative flex w-full overflow-x-hidden border-b-2 border-t-2 border-border bg-bw text-text font-base">
       <div className="animate-marquee whitespace-nowrap py-12">
@@ -10,7 +13,7 @@ export default function Marquee({ items }: { items: string[] }): React.ReactElem
             <span key={item} className="mx-4 text-4xl">
               {item}
             </span>
-          )
+          );
         })}
       </div>
 
@@ -20,11 +23,11 @@ export default function Marquee({ items }: { items: string[] }): React.ReactElem
             <span key={item} className="mx-4 text-4xl">
               {item}
             </span>
-          )
+          );
         })}
       </div>
 
       {/* must have both of these in order to work */}
     </div>
-  )
+  );
 }

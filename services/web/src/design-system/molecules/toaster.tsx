@@ -1,5 +1,5 @@
 import React from 'react';
-import {useToast} from '../../hooks/use-toast.ts';
+import { useToast } from '../../hooks/use-toast.ts';
 
 import {
   Toast,
@@ -8,14 +8,14 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from '../atoms/toast.tsx'
+} from '../atoms/toast.tsx';
 
 export function Toaster(): React.ReactElement {
-  const {toasts} = useToast()
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
-      {toasts.map(function ({id, title, description, action, ...props}) {
+      {toasts.map(function ({ id, title, description, action, ...props }) {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
@@ -27,9 +27,9 @@ export function Toaster(): React.ReactElement {
             {action}
             <ToastClose />
           </Toast>
-        )
+        );
       })}
       <ToastViewport />
     </ToastProvider>
-  )
+  );
 }
