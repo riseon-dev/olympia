@@ -1,13 +1,18 @@
 import React, { useCallback, useMemo } from 'react';
-import { WalletProvider, ConnectionProvider } from '@solana/wallet-adapter-react';
+import {
+  WalletProvider,
+  ConnectionProvider,
+} from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import {WalletModalProvider} from '@solana/wallet-adapter-react-ui';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import type { Adapter } from '@solana/wallet-adapter-base';
 import type { SolanaSignInInput } from '@solana/wallet-standard-features';
-import {AutoConnectProvider} from './components/AutoConnectProvider';
-import {StatelessApp} from './components/StatelessApp';
-import {clusterApiUrl} from '@solana/web3.js';
-import {UnsafeBurnerWalletAdapter} from '@solana/wallet-adapter-wallets';
+import { AutoConnectProvider } from './components/AutoConnectProvider';
+import { StatelessApp } from './components/StatelessApp';
+import { clusterApiUrl } from '@solana/web3.js';
+import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { ThemeProvider } from './components/ThemeProvider';
+// import {ThemeSwitcher} from './components/ThemeSwitcher';
 
 function App(): React.ReactElement {
   const network = WalletAdapterNetwork.Mainnet;
@@ -31,31 +36,29 @@ function App(): React.ReactElement {
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [network]
-  )
-
+  );
 
   const autoSignIn = useCallback(async (adapter: Adapter) => {
     if (!('signIn' in adapter)) return true;
 
     // Fetch the signInInput from the backend
 
-    const createResponse = await fetch("http://localhost:3000/solana/generate");
+    const createResponse = await fetch('http://localhost:3000/solana/generate');
     const input: SolanaSignInInput = await createResponse.json();
 
     // const input: SolanaSignInInput = await createSignInData();
 
     // Send the signInInput to the wallet and trigger a sign-in request
     const output = await adapter.signIn(input);
-    const constructPayload = JSON.stringify({input, output });
+    const constructPayload = JSON.stringify({ input, output });
 
     // Verify the sign-in output against the generated input server-side
-    const verifyResponse = await fetch("http://localhost:3000/solana/verify", {
-      method: "POST",
+    const verifyResponse = await fetch('http://localhost:3000/solana/verify', {
+      method: 'POST',
       body: constructPayload,
     });
     const success = await verifyResponse.json();
     console.log('success', success);
-
 
     /* ------------------------------------ BACKEND ------------------------------------ */
     // "/backend/verifySIWS" endpoint, `constructPayload` receieved
@@ -79,26 +82,30 @@ function App(): React.ReactElement {
     return false;
   }, []);
 
-  const autoConnect = useCallback(async (adapter: Adapter) => {
-
-    adapter.autoConnect().catch(() => {
-      return autoSignIn(adapter);
-    });
-    return false;
-  }, [autoSignIn]);
+  const autoConnect = useCallback(
+    async (adapter: Adapter) => {
+      adapter.autoConnect().catch(() => {
+        return autoSignIn(adapter);
+      });
+      return false;
+    },
+    [autoSignIn]
+  );
 
   return (
     <AutoConnectProvider>
       <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} autoConnect={autoConnect}>
           <WalletModalProvider>
-            <StatelessApp />
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              {/*<ThemeSwitcher />*/}
+              <StatelessApp />
+            </ThemeProvider>
           </WalletModalProvider>
         </WalletProvider>
       </ConnectionProvider>
     </AutoConnectProvider>
   );
-};
+}
 
-
-export default App
+export default App;

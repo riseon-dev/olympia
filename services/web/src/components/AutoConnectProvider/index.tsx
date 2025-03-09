@@ -7,16 +7,22 @@ interface AutoConnectContextState {
   setAutoConnect(autoConnect: boolean): void;
 }
 
-const AutoConnectContext = createContext<AutoConnectContextState>({} as AutoConnectContextState);
+const AutoConnectContext = createContext<AutoConnectContextState>(
+  {} as AutoConnectContextState
+);
 
 export function useAutoConnect(): AutoConnectContextState {
   return useContext(AutoConnectContext);
 }
 
-export const AutoConnectProvider: FC<{ children: ReactNode }> = ({ children }) : React.ReactElement => {
+export const AutoConnectProvider: FC<{ children: ReactNode }> = ({
+  children,
+}): React.ReactElement => {
   const [autoConnect, setAutoConnect] = useLocalStorage('autoConnect', true);
 
   return (
-    <AutoConnectContext.Provider value={{ autoConnect, setAutoConnect }}>{children}</AutoConnectContext.Provider>
+    <AutoConnectContext.Provider value={{ autoConnect, setAutoConnect }}>
+      {children}
+    </AutoConnectContext.Provider>
   );
 };
