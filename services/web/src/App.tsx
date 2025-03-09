@@ -9,6 +9,7 @@ import {StatelessApp} from './components/StatelessApp';
 import {clusterApiUrl} from '@solana/web3.js';
 import {UnsafeBurnerWalletAdapter} from '@solana/wallet-adapter-wallets';
 import {ThemeProvider} from './components/ThemeProvider';
+// import {ThemeSwitcher} from './components/ThemeSwitcher';
 
 function App(): React.ReactElement {
   const network = WalletAdapterNetwork.Mainnet;
@@ -94,6 +95,7 @@ function App(): React.ReactElement {
         <WalletProvider wallets={wallets} autoConnect={autoConnect}>
           <WalletModalProvider>
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              {/*<ThemeSwitcher />*/}
               <StatelessApp />
             </ThemeProvider>
           </WalletModalProvider>
