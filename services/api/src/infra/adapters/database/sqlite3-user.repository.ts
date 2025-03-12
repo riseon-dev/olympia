@@ -1,12 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '../../../domain/user.repository';
+import { DomainUser, UserRepository } from '../../../domain/user.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class Sqlite3UserRepository implements UserRepository {
-  saveUser(username: string, address: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async saveUser(user: DomainUser): Promise<boolean> {
+    const response = await this.userRepository.save(user);
+    return !!response;
   }
-  findByAddress(address: string): Promise<string | null> {
-    throw new Error('Method not implemented.');
+
+  findByAddress(address: string): Promise<DomainUser> {
+    return this.userRepository.findOne({ where: { address } });
+  }
+
+  findAll(): Promise<DomainUser[]> {
+    return this.userRepository.find();
   }
 }
