@@ -9,7 +9,6 @@ export interface SignInService {
     input: SolanaSignInInput,
     output: SolanaSignInOutput,
   ): boolean;
-  verifySignature(input: string): Promise<boolean | null>;
 }
 
 export const SignInService = Symbol('SignInService');
