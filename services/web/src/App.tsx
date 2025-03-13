@@ -95,18 +95,18 @@ function App(): React.ReactElement {
 
   return (
     <CookiesProvider defaultSetOptions={{ path: '/' }}>
-    <AutoConnectProvider>
-      <ConnectionProvider endpoint={endpoint}>
-        <WalletProvider wallets={wallets} autoConnect={autoConnect}>
-          <WalletModalProvider>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-              {/*<ThemeSwitcher />*/}
-              <StatelessApp />
-            </ThemeProvider>
-          </WalletModalProvider>
-        </WalletProvider>
-      </ConnectionProvider>
-    </AutoConnectProvider>
+      <AutoConnectProvider>
+        <ConnectionProvider endpoint={endpoint}>
+          <WalletProvider wallets={wallets} autoConnect={autoConnect}>
+            <WalletModalProvider>
+              <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+                {/*<ThemeSwitcher />*/}
+                <StatelessApp />
+              </ThemeProvider>
+            </WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </AutoConnectProvider>
     </CookiesProvider>
   );
 }

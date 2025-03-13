@@ -39,14 +39,6 @@ const Bar = (props: BarProps): React.ReactElement => {
   return (
     <Section>
       <Flex>
-        <Box>
-          hello
-        </Box>
-        <Box>
-          World
-        </Box>
-
-
 
       {publicKey ? (
 
