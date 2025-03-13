@@ -2,8 +2,17 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useCallback, useMemo } from 'react';
 import type { SolanaSignInInput } from '@solana/wallet-standard-features';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
+
+
 export const useWalletMethods = () => {
   const { wallet, publicKey, signIn, connect, disconnect } = useWallet();
+
+  // eslint-disable-next-line
+  const [_accessToken, setAccessToken] = useCookies(['access_token']);
+  // eslint-disable-next-line
+  const [_refreshToken, setRefreshToken] = useCookies(['refresh_token']);
+
   //  const { wallet, publicKey, connect, disconnect, signMessage, signIn } = useWallet();
 
   /** SignMessage */
@@ -88,13 +97,20 @@ export const useWalletMethods = () => {
         }
       );
       const success = verifyResponse.data;
-      console.log('success', success);
+      if (verifyResponse.status === 200 || verifyResponse.status === 201) {
+        console.log('verifyResponse', verifyResponse);
+        setAccessToken('access_token', verifyResponse.data.access_token);
+        setRefreshToken('refresh_token', verifyResponse.data.refresh_token);
 
-      console.log({
-        status: 'success',
-        method: 'signMessage',
-        message: `Message signed: ${JSON.stringify(output.signedMessage)} by ${output.account.address} with signature ${JSON.stringify(output.signature)}`,
-      });
+        console.log('success', success);
+
+        console.log({
+          status: 'success',
+          method: 'signMessage',
+          message: `Message signed: ${JSON.stringify(output.signedMessage)} by ${output.account.address} with signature ${JSON.stringify(output.signature)}`,
+        });
+      }
+
     } catch (error) {
       console.log({
         status: 'error',

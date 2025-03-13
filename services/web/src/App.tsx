@@ -12,6 +12,7 @@ import { StatelessApp } from './components/StatelessApp';
 import { clusterApiUrl } from '@solana/web3.js';
 import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { ThemeProvider } from './components/ThemeProvider';
+import { CookiesProvider } from 'react-cookie';
 // import {ThemeSwitcher} from './components/ThemeSwitcher';
 
 function App(): React.ReactElement {
@@ -93,6 +94,7 @@ function App(): React.ReactElement {
   );
 
   return (
+    <CookiesProvider defaultSetOptions={{ path: '/' }}>
     <AutoConnectProvider>
       <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} autoConnect={autoConnect}>
@@ -105,6 +107,7 @@ function App(): React.ReactElement {
         </WalletProvider>
       </ConnectionProvider>
     </AutoConnectProvider>
+    </CookiesProvider>
   );
 }
 
