@@ -12,7 +12,7 @@ export class Sqlite3UserRepository implements UserRepository {
   }
 
   findByAddress(address: string): Promise<DomainUser> {
-    return this.prisma.user.findUniqueOrThrow({ where: { address } });
+    return this.prisma.user.findUnique({ where: { address } });
   }
 
   findAll(): Promise<DomainUser[]> {

@@ -62,7 +62,7 @@ export class SignInWorkflow {
     refresh_token: string;
   }> {
     console.log('signUp', params);
-    const address = params?.output?.account?.address;
+    const address = params?.output?.account?.publicKey?.toString();
     if (!address) throw new Error('wallet address is required');
 
     const numberDictionary = NumberDictionary.generate({
@@ -94,7 +94,7 @@ export class SignInWorkflow {
   }> {
     console.log('signIn', params);
 
-    const address = params?.output?.account?.address;
+    const address = params?.output?.account?.publicKey?.toString();
     if (!address) throw new Error('wallet address is required');
 
     const user = await this.userRepository.findByAddress(address);

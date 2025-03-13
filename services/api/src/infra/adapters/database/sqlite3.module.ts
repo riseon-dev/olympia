@@ -5,7 +5,7 @@ import { PrismaService } from './prisma.service';
 
 const sqliteProvider = {
   provide: UserRepository,
-  useValue: Sqlite3UserRepository,
+  useClass: Sqlite3UserRepository,
 };
 
 @Module({

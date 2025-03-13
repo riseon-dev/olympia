@@ -14,7 +14,9 @@ export class SiwsStrategy extends PassportStrategy(Strategy, 'siws') {
   }
 
   async validate(req: { body: SolanaVerifySignInBodyDto }) {
-    this.logger.debug('Validating SIWS sign in data', req.body);
+    this.logger.debug(
+      `Validating SIWS sign in data ${JSON.stringify(req.body)}`,
+    );
 
     const { input, output } = req.body;
     if (!input || !output) throw new UnauthorizedException();
