@@ -8,7 +8,9 @@ import { useCookies } from 'react-cookie';
 export const useWalletMethods = () => {
   const { wallet, publicKey, signIn, connect, disconnect } = useWallet();
 
+  // eslint-disable-next-line
   const [_accessToken, setAccessToken] = useCookies(['access_token']);
+  // eslint-disable-next-line
   const [_refreshToken, setRefreshToken] = useCookies(['refresh_token']);
 
   //  const { wallet, publicKey, connect, disconnect, signMessage, signIn } = useWallet();
