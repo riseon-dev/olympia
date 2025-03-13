@@ -1,26 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { DomainUser, UserRepository } from '../../../domain/user.repository';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class Sqlite3UserRepository implements UserRepository {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async saveUser(user: DomainUser): Promise<boolean> {
-    const response = await this.userRepository.save(user);
+    const response = await this.prisma.user.create({ data: user });
     return !!response;
   }
 
   findByAddress(address: string): Promise<DomainUser> {
-    return this.userRepository.findOne({ where: { address } });
+    return this.prisma.user.findUniqueOrThrow({ where: { address } });
   }
 
   findAll(): Promise<DomainUser[]> {
-    return this.userRepository.find();
+    return this.prisma.user.findMany();
   }
 }

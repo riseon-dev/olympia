@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { SolanaSignInService } from '../infra/adapters/solana/solana-sign-in.service';
 import { ConfigService } from '@nestjs/config';
 import { DomainUser, UserRepository } from '../domain/user.repository';
@@ -22,6 +22,7 @@ export class SignInWorkflow {
   constructor(
     private readonly configService: ConfigService,
     private readonly solanaSignInService: SolanaSignInService,
+    @Inject(UserRepository)
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
   ) {}
