@@ -9,9 +9,9 @@ export const useWalletMethods = () => {
   const { wallet, publicKey, signIn, connect, disconnect } = useWallet();
 
   // eslint-disable-next-line
-  const [_accessToken, setAccessToken] = useCookies(['access_token']);
+  const [_accessToken, setAccessToken, removeAccessToken] = useCookies(['access_token']);
   // eslint-disable-next-line
-  const [_refreshToken, setRefreshToken] = useCookies(['refresh_token']);
+  const [_refreshToken, setRefreshToken, removeRefreshToken] = useCookies(['refresh_token']);
 
   //  const { wallet, publicKey, connect, disconnect, signMessage, signIn } = useWallet();
 
@@ -152,6 +152,8 @@ export const useWalletMethods = () => {
 
     try {
       await disconnect();
+      removeAccessToken('access_token');
+      removeRefreshToken('refresh_token');
       console.log({
         status: 'warning',
         method: 'disconnect',
