@@ -61,7 +61,6 @@ export class SignInWorkflow {
     access_token: string;
     refresh_token: string;
   }> {
-    console.log('signUp', params);
     const address = params?.output?.account?.publicKey?.toString();
     if (!address) throw new Error('wallet address is required');
 
@@ -92,8 +91,6 @@ export class SignInWorkflow {
     access_token: string;
     refresh_token: string;
   }> {
-    console.log('signIn', params);
-
     const address = params?.output?.account?.publicKey?.toString();
     if (!address) throw new Error('wallet address is required');
 
@@ -113,8 +110,6 @@ export class SignInWorkflow {
     access_token: string;
     refresh_token: string;
   }> {
-    console.log('refresh', params);
-
     if (!params?.address) throw new Error('wallet address is required');
 
     const user = await this.userRepository.findByAddress(params.address);
@@ -127,8 +122,6 @@ export class SignInWorkflow {
   }
 
   async getUserProfile(params: { address: string }): Promise<DomainUser> {
-    console.log('getUserProfile', params);
-
     if (!params?.address) throw new Error('wallet address is required');
 
     const user = await this.userRepository.findByAddress(params.address);

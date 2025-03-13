@@ -131,7 +131,7 @@ export class SolanaController {
   @UseGuards(SiwsAuthGuard)
   @Post('signin')
   async signIn(@Body() body: SolanaVerifySignInBodyDto) {
-    console.log('sign in', body);
+    this.logger.log(`Signing in... ${JSON.stringify(body.input)}`);
     try {
       return await this.signInWorkflow.signIn(body);
     } catch (error) {
@@ -151,6 +151,9 @@ export class SolanaController {
   @UseGuards(RefreshJwtGuard)
   @Post('refresh')
   async refresh(@Req() request: Request) {
+    this.logger.log(
+      `Refreshing token set... ${JSON.stringify(request['user'])}`,
+    );
     try {
       return await this.signInWorkflow.refreshTokenSet({
         address: request['user'].address,
@@ -172,6 +175,9 @@ export class SolanaController {
   @UseGuards(JwtGuard)
   @Get('profile')
   async getProfile(@Req() request: Request) {
+    this.logger.log(
+      `Getting user profile... ${JSON.stringify(request['user'])}`,
+    );
     try {
       return this.signInWorkflow.getUserProfile({
         address: request['user'].address,
