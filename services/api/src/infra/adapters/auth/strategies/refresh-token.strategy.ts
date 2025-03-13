@@ -20,7 +20,7 @@ export class RefreshJwtStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: { username: string; address: string }) {
+  async validate(payload: { address: string }) {
     const client = await this.userRepository.findByAddress(payload.address);
 
     if (!client) throw new UnauthorizedException();

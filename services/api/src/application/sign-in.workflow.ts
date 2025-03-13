@@ -27,8 +27,8 @@ export class SignInWorkflow {
     private readonly jwtService: JwtService,
   ) {}
 
-  private jwtSign(user: DomainUser): string {
-    const token = this.jwtService.sign(
+  private jwtSign(user: Partial<DomainUser>): string {
+    return this.jwtService.sign(
       {
         ...user,
       },
@@ -37,7 +37,6 @@ export class SignInWorkflow {
         expiresIn: '1d',
       },
     );
-    return token;
   }
 
   private generateTokenSet(user: DomainUser): {
@@ -45,8 +44,13 @@ export class SignInWorkflow {
     refresh_token: string;
   } {
     return {
-      access_token: this.jwtSign(user),
-      refresh_token: this.jwtSign(user),
+      access_token: this.jwtSign({
+        address: user.address,
+        username: user.username,
+      }),
+      refresh_token: this.jwtSign({
+        address: user.address,
+      }),
     };
   }
 
