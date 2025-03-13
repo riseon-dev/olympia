@@ -62,24 +62,6 @@ export const useWalletMethods = () => {
         input,
         output: {
           account: {
-            //    readonly address: string;
-            //
-            //     /** Public key of the account, corresponding with a secret key to use. */
-            //     readonly publicKey: ReadonlyUint8Array;
-            //
-            //     /**
-            //      * Chains supported by the account.
-            //      *
-            //      * This must be a subset of the {@link Wallet.chains | chains} of the Wallet.
-            //      */
-            //     readonly chains: IdentifierArray;
-            //
-            //     /**
-            //      * Feature names supported by the account.
-            //      *
-            //      * This must be a subset of the names of {@link Wallet.features | features} of the Wallet.
-            //      */
-            //     readonly features: IdentifierArray;
             publicKey: publicKey.toBuffer().toString('hex'),
           },
           signedMessage: output.signedMessage,
