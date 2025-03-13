@@ -11,7 +11,6 @@ export class JwtAuthService implements AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {
-    // FIXME use two different secrets here
     this.jwtSecret = configService.getOrThrow('SERVICE_API_JWT_SECRET_KEY');
   }
 
