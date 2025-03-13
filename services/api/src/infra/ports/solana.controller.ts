@@ -15,7 +15,7 @@ import {
   SolanaSignInOutput,
 } from '@solana/wallet-standard-features';
 import { IsArray, IsString, ValidateNested } from 'class-validator';
-import { SiwsStrategy } from '../adapters/auth/guards/siws-auth.guard';
+import { SiwsAuthGuard } from '../adapters/auth/guards/siws-auth.guard';
 import { RefreshJwtGuard } from '../adapters/auth/guards/refresh-jwt-auth.guard';
 import { JwtGuard } from '../adapters/auth/guards/jwt-auth.guard';
 
@@ -109,7 +109,7 @@ export class SolanaController {
   //   return this.signInWorkflow.verifySignInData(backendInput, backendOutput);
   // }
 
-  @UseGuards(SiwsStrategy)
+  @UseGuards(SiwsAuthGuard)
   @Post('signup')
   async signUp(@Body() body: SolanaVerifySignInBodyDto) {
     try {
@@ -128,9 +128,10 @@ export class SolanaController {
     }
   }
 
-  @UseGuards(SiwsStrategy)
+  @UseGuards(SiwsAuthGuard)
   @Post('signin')
   async signIn(@Body() body: SolanaVerifySignInBodyDto) {
+    console.log('sign in', body);
     try {
       return await this.signInWorkflow.signIn(body);
     } catch (error) {
@@ -168,8 +169,8 @@ export class SolanaController {
     }
   }
 
-  @Get('profile')
   @UseGuards(JwtGuard)
+  @Get('profile')
   async getProfile(@Req() request: Request) {
     try {
       return this.signInWorkflow.getUserProfile({

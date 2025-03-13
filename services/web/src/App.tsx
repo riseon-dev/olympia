@@ -53,7 +53,7 @@ function App(): React.ReactElement {
     const constructPayload = JSON.stringify({ input, output });
 
     // Verify the sign-in output against the generated input server-side
-    const verifyResponse = await fetch('http://localhost:3000/solana/verify', {
+    const verifyResponse = await fetch('http://localhost:3000/solana/signin', {
       method: 'POST',
       body: constructPayload,
     });

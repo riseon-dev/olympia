@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class JwtAuthService implements AuthService {
   constructor(private readonly jwtService: JwtService) {}
+
   generateAccessToken(payload: { username: string; address: string }): {
     token: string;
     refresh: string;
@@ -28,8 +29,8 @@ export class JwtAuthService implements AuthService {
         address: payload.address,
       },
       {
-        secret: process.env.JWT_SECRET_KEY,
-        expiresIn: '1d',
+        secret: process.env.SERVICE_API_JWT_SECRET_KEY,
+        expiresIn: '6d',
       },
     );
 

@@ -79,7 +79,7 @@ export const useWalletMethods = () => {
       });
 
       const verifyResponse = await axios.post(
-        'http://localhost:3000/solana/verify',
+        'http://localhost:3000/solana/signin',
         constructPayload,
         {
           headers: {
