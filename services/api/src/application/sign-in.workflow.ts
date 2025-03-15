@@ -1,6 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { SolanaSignInService } from '../infra/adapters/solana/solana-sign-in.service';
 import { ConfigService } from '@nestjs/config';
+import { DomainUser, UserRepository } from '../domain/user.repository';
+import { JwtService } from '@nestjs/jwt';
+import {
+  SolanaSignInInput,
+  SolanaSignInOutput,
+} from '@solana/wallet-standard-features';
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals,
+  NumberDictionary,
+} from 'unique-names-generator';
 
 @Injectable()
 export class SignInWorkflow {
@@ -9,13 +22,115 @@ export class SignInWorkflow {
   constructor(
     private readonly configService: ConfigService,
     private readonly solanaSignInService: SolanaSignInService,
+    @Inject(UserRepository)
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService,
   ) {}
+
+  private jwtSign(user: Partial<DomainUser>): string {
+    return this.jwtService.sign(
+      {
+        ...user,
+      },
+      {
+        secret: this.configService.getOrThrow('SERVICE_API_JWT_SECRET_KEY'),
+        expiresIn: '1d',
+      },
+    );
+  }
+
+  private generateTokenSet(user: DomainUser): {
+    access_token: string;
+    refresh_token: string;
+  } {
+    return {
+      access_token: this.jwtSign({
+        address: user.address,
+        username: user.username,
+      }),
+      refresh_token: this.jwtSign({
+        address: user.address,
+      }),
+    };
+  }
 
   async generateSignInData() {
     return await this.solanaSignInService.generateSignInData();
   }
 
-  async verifySignInData(input, output) {
-    return this.solanaSignInService.verifySignInData(input, output);
+  async signUp(params: {
+    input: SolanaSignInInput;
+    output: SolanaSignInOutput;
+  }): Promise<{
+    access_token: string;
+    refresh_token: string;
+  }> {
+    const address = params?.output?.account?.publicKey?.toString();
+    if (!address) throw new Error('wallet address is required');
+
+    const numberDictionary = NumberDictionary.generate({
+      min: 1000,
+      max: 9999,
+    });
+    const words = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, animals, numberDictionary],
+      separator: '-',
+    });
+    const username = words.toLowerCase();
+    await this.userRepository.saveUser({
+      address,
+      username,
+    });
+
+    return this.generateTokenSet({
+      address,
+      username,
+    });
+  }
+
+  async signIn(params: {
+    input: SolanaSignInInput;
+    output: SolanaSignInOutput;
+  }): Promise<{
+    access_token: string;
+    refresh_token: string;
+  }> {
+    const address = params?.output?.account?.publicKey?.toString();
+    if (!address) throw new Error('wallet address is required');
+
+    const user = await this.userRepository.findByAddress(address);
+
+    if (!user) {
+      return this.signUp(params);
+    }
+
+    return this.generateTokenSet({
+      address: address,
+      username: user.username,
+    });
+  }
+
+  async refreshTokenSet(params: { address: string }): Promise<{
+    access_token: string;
+    refresh_token: string;
+  }> {
+    if (!params?.address) throw new Error('wallet address is required');
+
+    const user = await this.userRepository.findByAddress(params.address);
+    if (!user) throw new Error('user not found');
+
+    return this.generateTokenSet({
+      address: user.address,
+      username: user.username,
+    });
+  }
+
+  async getUserProfile(params: { address: string }): Promise<DomainUser> {
+    if (!params?.address) throw new Error('wallet address is required');
+
+    const user = await this.userRepository.findByAddress(params.address);
+    if (!user) throw new Error('user not found');
+
+    return user;
   }
 }

@@ -17,11 +17,6 @@ export class SolanaSignInService implements SignInService {
     this.frontendUrl = this.configService.getOrThrow<string>('SERVICE_WEB_URL');
   }
 
-  verifySignature(input: string): Promise<boolean | null> {
-    console.log('verify signature input', input);
-    throw new Error('Method not implemented.');
-  }
-
   private generateNonce(): string {
     const nonce = randomStringForEntropy(96);
     if (!nonce || nonce.length < 8) {

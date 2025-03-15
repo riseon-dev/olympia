@@ -2,8 +2,17 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useCallback, useMemo } from 'react';
 import type { SolanaSignInInput } from '@solana/wallet-standard-features';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
+
+
 export const useWalletMethods = () => {
   const { wallet, publicKey, signIn, connect, disconnect } = useWallet();
+
+  // eslint-disable-next-line
+  const [_accessToken, setAccessToken, removeAccessToken] = useCookies(['access_token']);
+  // eslint-disable-next-line
+  const [_refreshToken, setRefreshToken, removeRefreshToken] = useCookies(['refresh_token']);
+
   //  const { wallet, publicKey, connect, disconnect, signMessage, signIn } = useWallet();
 
   /** SignMessage */
@@ -53,24 +62,6 @@ export const useWalletMethods = () => {
         input,
         output: {
           account: {
-            //    readonly address: string;
-            //
-            //     /** Public key of the account, corresponding with a secret key to use. */
-            //     readonly publicKey: ReadonlyUint8Array;
-            //
-            //     /**
-            //      * Chains supported by the account.
-            //      *
-            //      * This must be a subset of the {@link Wallet.chains | chains} of the Wallet.
-            //      */
-            //     readonly chains: IdentifierArray;
-            //
-            //     /**
-            //      * Feature names supported by the account.
-            //      *
-            //      * This must be a subset of the names of {@link Wallet.features | features} of the Wallet.
-            //      */
-            //     readonly features: IdentifierArray;
             publicKey: publicKey.toBuffer().toString('hex'),
           },
           signedMessage: output.signedMessage,
@@ -79,7 +70,7 @@ export const useWalletMethods = () => {
       });
 
       const verifyResponse = await axios.post(
-        'http://localhost:3000/solana/verify',
+        'http://localhost:3000/solana/signin',
         constructPayload,
         {
           headers: {
@@ -88,13 +79,20 @@ export const useWalletMethods = () => {
         }
       );
       const success = verifyResponse.data;
-      console.log('success', success);
+      if (verifyResponse.status === 200 || verifyResponse.status === 201) {
+        console.log('verifyResponse', verifyResponse);
+        setAccessToken('access_token', verifyResponse.data.access_token);
+        setRefreshToken('refresh_token', verifyResponse.data.refresh_token);
 
-      console.log({
-        status: 'success',
-        method: 'signMessage',
-        message: `Message signed: ${JSON.stringify(output.signedMessage)} by ${output.account.address} with signature ${JSON.stringify(output.signature)}`,
-      });
+        console.log('success', success);
+
+        console.log({
+          status: 'success',
+          method: 'signMessage',
+          message: `Message signed: ${JSON.stringify(output.signedMessage)} by ${output.account.address} with signature ${JSON.stringify(output.signature)}`,
+        });
+      }
+
     } catch (error) {
       console.log({
         status: 'error',
@@ -154,6 +152,8 @@ export const useWalletMethods = () => {
 
     try {
       await disconnect();
+      removeAccessToken('access_token');
+      removeRefreshToken('refresh_token');
       console.log({
         status: 'warning',
         method: 'disconnect',

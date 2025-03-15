@@ -1,10 +1,23 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { SignInWorkflow } from '../../application/sign-in.workflow';
 import {
   SolanaSignInInput,
   SolanaSignInOutput,
 } from '@solana/wallet-standard-features';
 import { IsArray, IsString, ValidateNested } from 'class-validator';
+import { SiwsAuthGuard } from '../adapters/auth/guards/siws-auth.guard';
+import { RefreshJwtGuard } from '../adapters/auth/guards/refresh-jwt-auth.guard';
+import { JwtGuard } from '../adapters/auth/guards/jwt-auth.guard';
 
 export class SolanaSignInInputDto {
   @IsString()
@@ -59,6 +72,7 @@ export class SolanaVerifySignInBodyDto {
 @Controller('/solana')
 export class SolanaController {
   private logger: Logger = new Logger(SolanaController.name);
+
   constructor(private readonly signInWorkflow: SignInWorkflow) {}
 
   @Get()
@@ -74,24 +88,111 @@ export class SolanaController {
     return this.signInWorkflow.generateSignInData();
   }
 
-  @Post('verify')
-  async verify(@Body() body: SolanaVerifySignInBodyDto) {
-    this.logger.log(`Verifying sign in data... ${JSON.stringify(body.input)}`);
-    const backendInput = body.input;
+  // @Post('verify')
+  // async verify(@Body() body: SolanaVerifySignInBodyDto) {
+  //   this.logger.log(`Verifying sign in data... ${JSON.stringify(body.input)}`);
+  //   const backendInput = body.input;
+  //
+  //   const backendOutput: SolanaSignInOutput = {
+  //     account: {
+  //       ...body.output.account,
+  //       publicKey: Buffer.from(body.output.account.publicKey.toString(), 'hex'),
+  //     },
+  //     // eslint-disable-next-line
+  //     // @ts-ignore
+  //     signature: Buffer.from(body.output.signature.data),
+  //     // eslint-disable-next-line
+  //     // @ts-ignore
+  //     signedMessage: Buffer.from(body.output.signedMessage.data),
+  //   };
+  //
+  //   return this.signInWorkflow.verifySignInData(backendInput, backendOutput);
+  // }
 
-    const backendOutput: SolanaSignInOutput = {
-      account: {
-        ...body.output.account,
-        publicKey: Buffer.from(body.output.account.publicKey.toString(), 'hex'),
-      },
-      // eslint-disable-next-line
-      // @ts-ignore
-      signature: Buffer.from(body.output.signature.data),
-      // eslint-disable-next-line
-      // @ts-ignore
-      signedMessage: Buffer.from(body.output.signedMessage.data),
-    };
+  @UseGuards(SiwsAuthGuard)
+  @Post('signup')
+  async signUp(@Body() body: SolanaVerifySignInBodyDto) {
+    try {
+      return await this.signInWorkflow.signUp(body);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error.message,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 
-    return this.signInWorkflow.verifySignInData(backendInput, backendOutput);
+  @UseGuards(SiwsAuthGuard)
+  @Post('signin')
+  async signIn(@Body() body: SolanaVerifySignInBodyDto) {
+    this.logger.log(`Signing in... ${JSON.stringify(body.input)}`);
+    try {
+      return await this.signInWorkflow.signIn(body);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error.message,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @UseGuards(RefreshJwtGuard)
+  @Post('refresh')
+  async refresh(@Req() request: Request) {
+    this.logger.log(
+      `Refreshing token set... ${JSON.stringify(request['user'])}`,
+    );
+    try {
+      return await this.signInWorkflow.refreshTokenSet({
+        address: request['user'].address,
+      });
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error.message,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('profile')
+  async getProfile(@Req() request: Request) {
+    this.logger.log(
+      `Getting user profile... ${JSON.stringify(request['user'])}`,
+    );
+    try {
+      return this.signInWorkflow.getUserProfile({
+        address: request['user'].address,
+      });
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error.message,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 }
